@@ -1,8 +1,14 @@
-{% comment %}
-  EcomExperts Test - Product Grid Section (from scratch)
-  - Exactly 6 selectable products
-  - Circle hotspots open a popup
-  - Popup data loaded dynamically from product JSON endpoints
+﻿{% comment %}
+  ============================================================
+  EcomExperts Test - Product Grid Section (built entirely from scratch)
+  ============================================================
+  - Six product slots, each selectable from the theme customizer.
+  - Clicking the hotspot circle opens a quick-view popup.
+  - Popup shows product image, title, price, description, and
+    dynamically rendered variant options (color swatches, size dropdown).
+  - ADD TO CART submits to /cart/add.js via fetch.
+  - Special rule: selecting Black + Medium auto-adds Soft Winter Jacket.
+  - No Dawn components or sections are reused.
 {% endcomment %}
 
 <section
@@ -16,8 +22,8 @@
     {% endif %}
 
     <div class="ecomx-grid__items">
+      {%- comment -%} Build an array of up to 6 product handles {%- endcomment -%}
       {% assign products_list = '' | split: ',' %}
-
       {% if section.settings.product_1 != blank %}{% assign products_list = products_list | push: section.settings.product_1 %}{% endif %}
       {% if section.settings.product_2 != blank %}{% assign products_list = products_list | push: section.settings.product_2 %}{% endif %}
       {% if section.settings.product_3 != blank %}{% assign products_list = products_list | push: section.settings.product_3 %}{% endif %}
@@ -28,22 +34,19 @@
       {% for p in products_list %}
         {% assign product_obj = all_products[p] %}
         {% if product_obj %}
-          <article class="ecomx-card" data-ecomx-product-card data-handle="{{ product_obj.handle | escape }}">
-            <a class="ecomx-card__media" href="{{ product_obj.url }}">
+          <article class="ecomx-card">
+            {%- comment -%} Product image {%- endcomment -%}
+            <div class="ecomx-card__media">
               {% if product_obj.featured_image %}
-                {{ product_obj.featured_image | image_url: width: 900 | image_tag: loading: 'lazy', class: 'ecomx-card__img' }}
+                {{ product_obj.featured_image | image_url: width: 900 | image_tag:
+                  loading: 'lazy',
+                  class: 'ecomx-card__img',
+                  sizes: '(min-width: 990px) 33vw, (min-width: 560px) 50vw, 100vw'
+                }}
               {% endif %}
-            </a>
-
-            <div class="ecomx-card__info">
-              <h3 class="ecomx-card__title">{{ product_obj.title | escape }}</h3>
-              <p class="ecomx-card__price">{{ product_obj.price | money }}</p>
             </div>
 
-            {% comment %}
-              The “little circle” hotspot button.
-              Position it via CSS according to Figma.
-            {% endcomment %}
+            {%- comment -%} Hotspot circle - opens quick-view popup {%- endcomment -%}
             <button
               class="ecomx-hotspot"
               type="button"
@@ -59,32 +62,34 @@
     </div>
   </div>
 
-  {% comment %}
-    Popup markup (single instance)
-    We'll populate content via JS
-  {% endcomment %}
+  {%- comment -%}
+    -- Quick-view popup (single instance, populated via JS) --
+  {%- endcomment -%}
   <div class="ecomx-modal" hidden data-ecomx-modal>
     <div class="ecomx-modal__overlay" data-ecomx-close></div>
 
     <div class="ecomx-modal__dialog" role="dialog" aria-modal="true" aria-label="Product quick view">
-      <button class="ecomx-modal__close" type="button" aria-label="Close" data-ecomx-close>×</button>
+      <button class="ecomx-modal__close" type="button" aria-label="Close" data-ecomx-close>&times;</button>
 
       <div class="ecomx-modal__body">
+        {%- comment -%} Left - product image {%- endcomment -%}
         <div class="ecomx-modal__media">
           <img alt="" class="ecomx-modal__img" data-ecomx-modal-img />
         </div>
 
+        {%- comment -%} Right - product info + variant form {%- endcomment -%}
         <div class="ecomx-modal__content">
           <h3 class="ecomx-modal__title" data-ecomx-modal-title></h3>
           <p class="ecomx-modal__price" data-ecomx-modal-price></p>
-
           <div class="ecomx-modal__desc" data-ecomx-modal-desc></div>
 
           <form class="ecomx-form" data-ecomx-form>
+            {%- comment -%} Variant fieldsets injected here by JS {%- endcomment -%}
             <div class="ecomx-variants" data-ecomx-variants></div>
 
-            <button class="ecomx-btn ecomx-btn--primary ecomx-btn--full" type="submit" data-ecomx-atc>
+            <button class="ecomx-btn ecomx-btn--atc ecomx-btn--full" type="submit">
               <span class="ecomx-btn__text">ADD TO CART</span>
+              <span class="ecomx-btn__arrow" aria-hidden="true">&rarr;</span>
               <span class="ecomx-btn__shine" aria-hidden="true"></span>
             </button>
 
@@ -96,12 +101,19 @@
   </div>
 </section>
 
+{%- comment -%} Load JS at end so DOM is ready {%- endcomment -%}
+<script src="{{ 'ecomx-test.js' | asset_url }}" defer="defer"></script>
+
 {% schema %}
 {
   "name": "EcomX - Product Grid",
   "settings": [
-    { "type": "text", "id": "heading", "label": "Heading", "default": "Featured products" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Tisso vison in the wild" },
 
+    {
+      "type": "header",
+      "content": "Products (select exactly 6)"
+    },
     { "type": "product", "id": "product_1", "label": "Product 1" },
     { "type": "product", "id": "product_2", "label": "Product 2" },
     { "type": "product", "id": "product_3", "label": "Product 3" },
@@ -110,11 +122,15 @@
     { "type": "product", "id": "product_6", "label": "Product 6" },
 
     {
+      "type": "header",
+      "content": "Bundle rule"
+    },
+    {
       "type": "text",
       "id": "bundle_handle",
-      "label": "Bundle product handle (Soft Winter Jacket)",
+      "label": "Bundle product handle",
       "default": "soft-winter-jacket",
-      "info": "Used for the rule: when Black + Medium is selected, add this product too."
+      "info": "When a product with Black + Medium is added, this product is auto-added too."
     }
   ],
   "presets": [{ "name": "EcomX - Product Grid" }]

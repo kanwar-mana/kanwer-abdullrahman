@@ -1,7 +1,7 @@
 {
   "sections": {
-    "banner": { "type": "gift_guide_banner" },
-    "grid": { "type": "gift_guide_grid" }
+    "banner": { "type": "ecomx-banner" },
+    "grid": { "type": "ecomx-product-grid" }
   },
   "order": ["banner", "grid"]
 }
