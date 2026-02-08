@@ -1,0 +1,83 @@
+{% comment %}
+  EcomExperts Test - Banner Section (from scratch)
+  - All key texts editable via schema
+  - Button animation via CSS
+{% endcomment %}
+
+<section
+  class="ecomx-banner"
+  style="
+    --ecomx-bg: {{ section.settings.bg_color }};
+    --ecomx-text: {{ section.settings.text_color }};
+    --ecomx-accent: {{ section.settings.accent_color }};
+  "
+>
+  <div class="ecomx-banner__inner page-width">
+    <div class="ecomx-banner__content">
+      {% if section.settings.kicker != blank %}
+        <p class="ecomx-banner__kicker">{{ section.settings.kicker | escape }}</p>
+      {% endif %}
+
+      {% if section.settings.heading != blank %}
+        <h1 class="ecomx-banner__heading">{{ section.settings.heading }}</h1>
+      {% endif %}
+
+      {% if section.settings.body != blank %}
+        <div class="ecomx-banner__body rte">
+          {{ section.settings.body }}
+        </div>
+      {% endif %}
+
+      <div class="ecomx-banner__actions">
+        {% if section.settings.primary_label != blank and section.settings.primary_link != blank %}
+          <a class="ecomx-btn ecomx-btn--primary" href="{{ section.settings.primary_link }}">
+            <span class="ecomx-btn__text">{{ section.settings.primary_label | escape }}</span>
+            <span class="ecomx-btn__shine" aria-hidden="true"></span>
+          </a>
+        {% endif %}
+
+        {% if section.settings.secondary_label != blank and section.settings.secondary_link != blank %}
+          <a class="ecomx-btn ecomx-btn--secondary" href="{{ section.settings.secondary_link }}">
+            <span class="ecomx-btn__text">{{ section.settings.secondary_label | escape }}</span>
+            <span class="ecomx-btn__shine" aria-hidden="true"></span>
+          </a>
+        {% endif %}
+      </div>
+    </div>
+
+    {% comment %}
+      Optional image area if the Figma has one.
+      You can remove if not needed.
+    {% endcomment %}
+    {% if section.settings.image != blank %}
+      <div class="ecomx-banner__media">
+        {{ section.settings.image | image_url: width: 1600 | image_tag: loading: 'lazy', class: 'ecomx-banner__image' }}
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "EcomX - Banner",
+  "settings": [
+    { "type": "color", "id": "bg_color", "label": "Background color", "default": "#ffffff" },
+    { "type": "color", "id": "text_color", "label": "Text color", "default": "#111111" },
+    { "type": "color", "id": "accent_color", "label": "Accent color", "default": "#e11d48" },
+
+    { "type": "text", "id": "kicker", "label": "Kicker (small text)", "default": "New Collection" },
+    { "type": "richtext", "id": "heading", "label": "Heading", "default": "<p>Dress sharp. Feel comfy.</p>" },
+    { "type": "richtext", "id": "body", "label": "Body text", "default": "<p>Pixel-perfect Shopify section built from scratch.</p>" },
+
+    { "type": "text", "id": "primary_label", "label": "Primary button label", "default": "Shop now" },
+    { "type": "url", "id": "primary_link", "label": "Primary button link" },
+
+    { "type": "text", "id": "secondary_label", "label": "Secondary button label", "default": "Learn more" },
+    { "type": "url", "id": "secondary_link", "label": "Secondary button link" },
+
+    { "type": "image_picker", "id": "image", "label": "Image (optional)" }
+  ],
+  "presets": [{ "name": "EcomX - Banner" }]
+}
+{% endschema %}
+
