@@ -1,0 +1,518 @@
+﻿/* ============================================================
+   EcomExperts Test - Custom Styles (from scratch)
+   ============================================================
+   Sections: Banner + Product Grid + Popup
+   No Dawn component CSS is reused.
+   ============================================================ */
+
+/*  Reset & helpers  */
+
+/* Prevent background scroll when modal is open */
+.ecomx-lock {
+  overflow: hidden;
+}
+
+/*  Banner  */
+
+.ecomx-banner {
+  color: var(--ecomx-text, #111);
+  font-family: inherit;
+}
+
+/* Top bar */
+.ecomx-banner__topbar {
+  background: #000;
+  color: #fff;
+  padding: 10px 0;
+}
+
+.ecomx-banner__topbar-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.ecomx-banner__menu-toggle {
+  display: none; /* shown on mobile */
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.ecomx-banner__logo {
+  font-weight: 800;
+  font-size: 18px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.ecomx-banner__promo {
+  font-size: 13px;
+  opacity: 0.85;
+  text-align: center;
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Hero */
+.ecomx-banner__hero {
+  position: relative;
+  overflow: hidden;
+}
+
+.ecomx-banner__bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.ecomx-banner__bg-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.ecomx-banner__hero-content {
+  position: relative;
+  z-index: 1;
+  padding: 80px 0 48px;
+  max-width: 520px;
+}
+
+.ecomx-banner__heading {
+  font-size: clamp(36px, 5vw, 64px);
+  font-weight: 900;
+  line-height: 1.05;
+  margin: 0 0 16px;
+  color: #000;
+}
+
+.ecomx-banner__body {
+  font-size: 14px;
+  line-height: 1.6;
+  margin: 0 0 24px;
+  max-width: 380px;
+  color: #000;
+}
+
+.ecomx-banner__body p {
+  margin: 0;
+}
+
+/* Bottom bar */
+.ecomx-banner__bottom {
+  position: relative;
+  z-index: 1;
+  background: rgba(0, 0, 0, 0.65);
+  padding: 10px 0;
+  text-align: center;
+}
+
+.ecomx-banner__bottom-text {
+  color: #fff;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/*  Buttons (shared)  */
+
+.ecomx-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 22px;
+  border: none;
+  text-decoration: none;
+  cursor: pointer;
+  overflow: hidden;
+  user-select: none;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transition: transform 180ms ease, box-shadow 180ms ease;
+  font-family: inherit;
+}
+
+.ecomx-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+}
+.ecomx-btn:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+/* Shine sweep animation on hover */
+.ecomx-btn__shine {
+  position: absolute;
+  inset: 0;
+  transform: translateX(-120%);
+  background: linear-gradient(
+    120deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.4) 50%,
+    transparent 100%
+  );
+  transition: transform 500ms ease;
+  pointer-events: none;
+}
+.ecomx-btn:hover .ecomx-btn__shine {
+  transform: translateX(120%);
+}
+
+.ecomx-btn__arrow {
+  font-size: 16px;
+  transition: transform 200ms ease;
+}
+.ecomx-btn:hover .ecomx-btn__arrow {
+  transform: translateX(3px);
+}
+
+/* CTA (yellow accent in top bar) */
+.ecomx-btn--cta {
+  background: var(--ecomx-accent, #FFE500);
+  color: #000;
+  border-radius: 0;
+}
+
+/* Primary (SHOP NOW  dark bg) */
+.ecomx-btn--primary {
+  background: #000;
+  color: #fff;
+  border-radius: 0;
+  border: 2px solid #000;
+}
+
+/* ATC button (dark, full width in popup) */
+.ecomx-btn--atc {
+  background: #000;
+  color: #fff;
+  border-radius: 0;
+}
+
+.ecomx-btn--full {
+  width: 100%;
+}
+
+/*  Product Grid  */
+
+.ecomx-grid {
+  padding: 48px 0 56px;
+  background: #fff;
+}
+
+.ecomx-grid__heading {
+  font-size: 22px;
+  font-weight: 600;
+  margin: 0 0 20px;
+  color: #111;
+}
+
+.ecomx-grid__items {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+/* Card */
+.ecomx-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+  background: #f5f5f5;
+  aspect-ratio: 3 / 4;
+}
+
+.ecomx-card__media {
+  width: 100%;
+  height: 100%;
+}
+
+.ecomx-card__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 400ms ease;
+}
+
+.ecomx-card:hover .ecomx-card__img {
+  transform: scale(1.03);
+}
+
+/* Hotspot circle */
+.ecomx-hotspot {
+  position: absolute;
+  bottom: 14px;
+  right: 14px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(0, 0, 0, 0.18);
+  background: rgba(255, 255, 255, 0.92);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: transform 180ms ease, box-shadow 180ms ease;
+  z-index: 2;
+}
+
+.ecomx-hotspot:hover {
+  transform: scale(1.1);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+}
+
+.ecomx-hotspot__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #111;
+}
+
+/*  Modal / Popup  */
+
+.ecomx-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ecomx-modal[hidden] {
+  display: none;
+}
+
+.ecomx-modal__overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.ecomx-modal__dialog {
+  position: relative;
+  width: min(880px, calc(100% - 32px));
+  max-height: 90vh;
+  overflow-y: auto;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.2);
+}
+
+.ecomx-modal__close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background: #fff;
+  cursor: pointer;
+  font-size: 20px;
+  line-height: 1;
+  display: grid;
+  place-items: center;
+  z-index: 2;
+  transition: background 120ms ease;
+}
+.ecomx-modal__close:hover {
+  background: #f0f0f0;
+}
+
+.ecomx-modal__body {
+  display: grid;
+  grid-template-columns: 0.45fr 0.55fr;
+}
+
+.ecomx-modal__media {
+  background: #f7f7f7;
+  min-height: 300px;
+}
+
+.ecomx-modal__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.ecomx-modal__content {
+  padding: 28px 24px 24px;
+  display: flex;
+  flex-direction: column;
+}
+
+.ecomx-modal__title {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0 0 6px;
+  padding-right: 32px; /* avoid close button overlap */
+}
+
+.ecomx-modal__price {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ecomx-accent, #e11d48);
+  margin: 0 0 12px;
+}
+
+.ecomx-modal__desc {
+  font-size: 13px;
+  line-height: 1.55;
+  margin: 0 0 18px;
+  opacity: 0.8;
+  max-height: 90px;
+  overflow-y: auto;
+}
+
+/*  Variant options  */
+
+.ecomx-option {
+  border: none;
+  padding: 0;
+  margin: 0 0 14px;
+}
+
+.ecomx-option__label {
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.ecomx-option__values {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+/* Radio pill (for Color) */
+.ecomx-pill {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.ecomx-pill input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.ecomx-pill span {
+  display: inline-block;
+  padding: 10px 18px;
+  border: 1px solid rgba(0, 0, 0, 0.18);
+  font-size: 13px;
+  cursor: pointer;
+  transition: border-color 140ms ease, background 140ms ease;
+}
+
+.ecomx-pill input:checked + span {
+  border-color: #000;
+  background: #f5f5f5;
+}
+
+/* Select dropdown (for Size) */
+.ecomx-select {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid rgba(0, 0, 0, 0.18);
+  font-size: 13px;
+  font-family: inherit;
+  appearance: auto;
+  cursor: pointer;
+  background: #fff;
+}
+
+/* Form status message */
+.ecomx-form__status {
+  margin: 10px 0 0;
+  font-size: 13px;
+  opacity: 0.85;
+  min-height: 20px;
+}
+
+/*  Mobile responsive  */
+
+@media (max-width: 989px) {
+  /* Show hamburger on mobile */
+  .ecomx-banner__menu-toggle {
+    display: block;
+  }
+
+  /* Hide promo text on smaller screens */
+  .ecomx-banner__promo {
+    display: none;
+  }
+
+  .ecomx-banner__topbar-inner {
+    justify-content: flex-start;
+    gap: 16px;
+  }
+
+  /* Push CTA to far right on mobile */
+  .ecomx-btn--cta {
+    margin-left: auto;
+  }
+
+  /* Banner hero content */
+  .ecomx-banner__hero-content {
+    padding: 40px 0 32px;
+    text-align: center;
+    max-width: 100%;
+  }
+
+  .ecomx-banner__body {
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .ecomx-banner__heading {
+    font-size: clamp(28px, 6vw, 42px);
+  }
+
+  /* Grid: 2 columns on tablet */
+  .ecomx-grid__items {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Popup: stack vertically */
+  .ecomx-modal__body {
+    grid-template-columns: 1fr;
+  }
+
+  .ecomx-modal__media {
+    max-height: 260px;
+  }
+}
+
+@media (max-width: 560px) {
+  /* Grid: single column on small mobile */
+  .ecomx-grid__items {
+    grid-template-columns: 1fr;
+  }
+
+  .ecomx-banner__hero-content {
+    padding: 28px 0 24px;
+  }
+
+  .ecomx-modal__dialog {
+    width: calc(100% - 24px);
+    border-radius: 8px;
+  }
+}

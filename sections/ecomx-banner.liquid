@@ -1,0 +1,137 @@
+{% comment %}
+  ============================================================
+  EcomExperts Test – Banner Section (built entirely from scratch)
+  ============================================================
+  All visible text is editable via the Shopify theme customizer.
+  Button animation (shine sweep) handled purely in CSS.
+  No Dawn components or sections are reused.
+{% endcomment %}
+
+{{ 'ecomx-test.css' | asset_url | stylesheet_tag }}
+
+<section
+  class="ecomx-banner"
+  style="
+    --ecomx-bg: {{ section.settings.bg_color }};
+    --ecomx-text: {{ section.settings.text_color }};
+    --ecomx-accent: {{ section.settings.accent_color }};
+  "
+>
+  {%- comment -%} ── Top navigation bar ── {%- endcomment -%}
+  <div class="ecomx-banner__topbar">
+    <div class="ecomx-banner__topbar-inner page-width">
+      {%- comment -%} Hamburger menu icon (visible on mobile only) {%- endcomment -%}
+      <button class="ecomx-banner__menu-toggle" type="button" aria-label="Menu">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <line x1="3" y1="12" x2="21" y2="12"/>
+          <line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+      </button>
+
+      {%- comment -%} Logo / brand name {%- endcomment -%}
+      <span class="ecomx-banner__logo">{{ section.settings.logo_text | escape }}</span>
+
+      {%- comment -%} Promotional text (center, hidden on mobile) {%- endcomment -%}
+      {% if section.settings.promo_text != blank %}
+        <span class="ecomx-banner__promo">{{ section.settings.promo_text | escape }}</span>
+      {% endif %}
+
+      {%- comment -%} CTA button (right) – yellow accent {%- endcomment -%}
+      {% if section.settings.cta_label != blank %}
+        <a
+          class="ecomx-btn ecomx-btn--cta"
+          href="{{ section.settings.cta_link }}"
+        >
+          <span class="ecomx-btn__text">{{ section.settings.cta_label | escape }}</span>
+          <span class="ecomx-btn__arrow" aria-hidden="true">&rarr;</span>
+          <span class="ecomx-btn__shine" aria-hidden="true"></span>
+        </a>
+      {% endif %}
+    </div>
+  </div>
+
+  {%- comment -%} ── Hero area with background image ── {%- endcomment -%}
+  <div class="ecomx-banner__hero">
+    {% if section.settings.bg_image != blank %}
+      <div class="ecomx-banner__bg">
+        {{ section.settings.bg_image | image_url: width: 2400 | image_tag:
+          loading: 'eager',
+          class: 'ecomx-banner__bg-img',
+          sizes: '100vw'
+        }}
+      </div>
+    {% endif %}
+
+    <div class="ecomx-banner__hero-content page-width">
+      {% if section.settings.heading != blank %}
+        <h1 class="ecomx-banner__heading">{{ section.settings.heading | escape }}</h1>
+      {% endif %}
+
+      {% if section.settings.body != blank %}
+        <div class="ecomx-banner__body">{{ section.settings.body }}</div>
+      {% endif %}
+
+      {% if section.settings.primary_label != blank %}
+        <a
+          class="ecomx-btn ecomx-btn--primary"
+          href="{{ section.settings.primary_link }}"
+        >
+          <span class="ecomx-btn__text">{{ section.settings.primary_label | escape }}</span>
+          <span class="ecomx-btn__arrow" aria-hidden="true">&rarr;</span>
+          <span class="ecomx-btn__shine" aria-hidden="true"></span>
+        </a>
+      {% endif %}
+    </div>
+
+    {%- comment -%} ── Bottom text bar ── {%- endcomment -%}
+    {% if section.settings.bottom_text != blank %}
+      <div class="ecomx-banner__bottom">
+        <span class="ecomx-banner__bottom-text">{{ section.settings.bottom_text | escape }}</span>
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "EcomX - Banner",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    { "type": "color", "id": "bg_color", "label": "Background color", "default": "#ffffff" },
+    { "type": "color", "id": "text_color", "label": "Text color", "default": "#111111" },
+    { "type": "color", "id": "accent_color", "label": "Accent / button color", "default": "#FFE500" },
+
+    {
+      "type": "header",
+      "content": "Top bar"
+    },
+    { "type": "text", "id": "logo_text", "label": "Logo text", "default": "TISSO VISON" },
+    { "type": "text", "id": "promo_text", "label": "Promo text (center)", "default": "Find the ideal gift for your loved ones." },
+    { "type": "text", "id": "cta_label", "label": "CTA button label", "default": "CHOOSE GIFT" },
+    { "type": "url", "id": "cta_link", "label": "CTA button link" },
+
+    {
+      "type": "header",
+      "content": "Hero"
+    },
+    { "type": "image_picker", "id": "bg_image", "label": "Background image" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "The Gift Guide" },
+    { "type": "richtext", "id": "body", "label": "Description", "default": "<p>Discover Joy: Your Ultimate Holiday Gift Destination. Explore our curated selection and find the perfect gifts to delight your loved ones this holiday season.</p>" },
+
+    { "type": "text", "id": "primary_label", "label": "Primary button label", "default": "SHOP NOW" },
+    { "type": "url", "id": "primary_link", "label": "Primary button link" },
+
+    {
+      "type": "header",
+      "content": "Bottom bar"
+    },
+    { "type": "text", "id": "bottom_text", "label": "Bottom text", "default": "SUSTAINABLE, ETHICALLY MADE CLOTHES IN SIZES XXS TO 6XL" }
+  ],
+  "presets": [{ "name": "EcomX - Banner" }]
+}
+{% endschema %}
+
