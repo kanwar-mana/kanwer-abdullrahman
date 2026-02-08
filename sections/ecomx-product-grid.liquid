@@ -22,28 +22,28 @@
     {% endif %}
 
     <div class="ecomx-grid__items">
-      {%- comment -%} Build an array of up to 6 product handles {%- endcomment -%}
-      {% assign products_list = '' | split: ',' %}
-      {% if section.settings.product_1 != blank %}{% assign products_list = products_list | push: section.settings.product_1 %}{% endif %}
-      {% if section.settings.product_2 != blank %}{% assign products_list = products_list | push: section.settings.product_2 %}{% endif %}
-      {% if section.settings.product_3 != blank %}{% assign products_list = products_list | push: section.settings.product_3 %}{% endif %}
-      {% if section.settings.product_4 != blank %}{% assign products_list = products_list | push: section.settings.product_4 %}{% endif %}
-      {% if section.settings.product_5 != blank %}{% assign products_list = products_list | push: section.settings.product_5 %}{% endif %}
-      {% if section.settings.product_6 != blank %}{% assign products_list = products_list | push: section.settings.product_6 %}{% endif %}
+      {%- comment -%}
+        The "product" setting type returns a product OBJECT (not a handle
+        string), so we use it directly — no all_products[] look-up needed.
+      {%- endcomment -%}
 
-      {% for p in products_list %}
-        {% assign product_obj = all_products[p] %}
-        {% if product_obj %}
+      {%- liquid
+        assign product_keys = 'product_1,product_2,product_3,product_4,product_5,product_6' | split: ','
+      -%}
+
+      {%- for key in product_keys -%}
+        {%- assign product_obj = section.settings[key] -%}
+        {%- if product_obj != blank -%}
           <article class="ecomx-card">
             {%- comment -%} Product image {%- endcomment -%}
             <div class="ecomx-card__media">
-              {% if product_obj.featured_image %}
+              {%- if product_obj.featured_image -%}
                 {{ product_obj.featured_image | image_url: width: 900 | image_tag:
                   loading: 'lazy',
                   class: 'ecomx-card__img',
                   sizes: '(min-width: 990px) 33vw, (min-width: 560px) 50vw, 100vw'
                 }}
-              {% endif %}
+              {%- endif -%}
             </div>
 
             {%- comment -%} Hotspot circle - opens quick-view popup {%- endcomment -%}
@@ -57,8 +57,8 @@
               <span class="ecomx-hotspot__dot" aria-hidden="true"></span>
             </button>
           </article>
-        {% endif %}
-      {% endfor %}
+        {%- endif -%}
+      {%- endfor -%}
     </div>
   </div>
 
