@@ -18,6 +18,29 @@
  * 8. Keyboard accessible (Escape closes modal, focus trap).
  */
 
+/*  Type definitions for Shopify product JSON (/products/:handle.js)  */
+
+/**
+ * @typedef {object} ShopifyVariant
+ * @property {number} id
+ * @property {string} title
+ * @property {number} price
+ * @property {boolean} available
+ * @property {string[]} options
+ */
+
+/**
+ * @typedef {object} ShopifyProduct
+ * @property {number} id
+ * @property {string} title
+ * @property {string} handle
+ * @property {string} description
+ * @property {number} price
+ * @property {string[]} images
+ * @property {string[]} options
+ * @property {ShopifyVariant[]} variants
+ */
+
 (() => {
   "use strict";
 
@@ -31,28 +54,27 @@
    */
   const formatMoney = (cents) => {
     const value = (cents / 100).toFixed(2);
-    // Using euro symbol to match the design mockup
     return `${value}\u20AC`;
   };
 
   /**
    * Fetch product JSON from Shopify storefront endpoint.
    * @param {string} handle - Product handle (URL slug).
-   * @returns {Promise<Object>} Product data object.
+   * @returns {Promise<ShopifyProduct>} Product data object.
    */
   const fetchProduct = async (handle) => {
     const response = await fetch(`/products/${handle}.js`, {
       headers: { Accept: "application/json" },
     });
     if (!response.ok) throw new Error(`Failed to fetch product: ${handle}`);
-    return response.json();
+    return /** @type {Promise<ShopifyProduct>} */ (response.json());
   };
 
   /**
    * Add one or more items to the Shopify cart.
    * @param {number} variantId - The variant ID to add.
    * @param {number} [quantity=1] - Quantity to add.
-   * @returns {Promise<Object>} Cart response.
+   * @returns {Promise<unknown>} Cart response.
    */
   const addToCart = async (variantId, quantity = 1) => {
     const response = await fetch("/cart/add.js", {
@@ -89,11 +111,15 @@
     const fieldsets = container.querySelectorAll("[data-ecomx-option]");
     return Array.from(fieldsets).map((fieldset) => {
       // Check for radio buttons first (Color pills)
-      const checkedRadio = fieldset.querySelector("input[type='radio']:checked");
+      const checkedRadio = /** @type {HTMLInputElement|null} */ (
+        fieldset.querySelector("input[type='radio']:checked")
+      );
       if (checkedRadio) return checkedRadio.value;
 
       // Check for select dropdown (Size)
-      const select = fieldset.querySelector("select");
+      const select = /** @type {HTMLSelectElement|null} */ (
+        fieldset.querySelector("select")
+      );
       if (select && select.value) return select.value;
 
       return null;
@@ -103,26 +129,24 @@
   /**
    * Find matching variant based on selected options.
    * Only returns available (in-stock) variants.
-   * @param {Object} product - Product data from /products/:handle.js.
+   * @param {ShopifyProduct} product - Product data from /products/:handle.js.
    * @param {Array<string|null>} selectedOptions - Current selections.
-   * @returns {Object|null} Matching variant or null.
+   * @returns {ShopifyVariant|undefined} Matching variant or undefined.
    */
   const findMatchingVariant = (product, selectedOptions) => {
-    return (
-      product.variants.find((variant) => {
-        if (!variant.available) return false;
-        return variant.options.every(
-          (opt, idx) => opt === selectedOptions[idx]
-        );
-      }) || null
-    );
+    return product.variants.find((variant) => {
+      if (!variant.available) return false;
+      return variant.options.every(
+        (opt, idx) => opt === selectedOptions[idx]
+      );
+    });
   };
 
   /**
    * Render variant option controls dynamically.
    * - Color-type options render as radio pill buttons.
    * - Size-type options render as a <select> dropdown.
-   * @param {Object} product - Product data.
+   * @param {ShopifyProduct} product - Product data.
    * @param {HTMLElement} root - Container to inject controls into.
    */
   const renderVariants = (product, root) => {
@@ -130,11 +154,13 @@
 
     product.options.forEach((optionName, optionIndex) => {
       // Get unique values for this option, preserving order
+      /** @type {string[]} */
       const values = [];
+      /** @type {Set<string>} */
       const seen = new Set();
       product.variants.forEach((v) => {
         const val = v.options[optionIndex];
-        if (!seen.has(val)) {
+        if (val !== undefined && !seen.has(val)) {
           seen.add(val);
           values.push(val);
         }
@@ -225,22 +251,44 @@
    * @param {HTMLElement} gridEl - The [data-ecomx-grid] container.
    */
   const initGrid = (gridEl) => {
-    // Cache DOM references
-    const modal = gridEl.querySelector("[data-ecomx-modal]");
+    // Cache DOM references  bail out if the modal is missing
+    const modal = /** @type {HTMLElement|null} */ (
+      gridEl.querySelector("[data-ecomx-modal]")
+    );
+    if (!modal) return;
+
     const closeButtons = modal.querySelectorAll("[data-ecomx-close]");
-    const imgEl = modal.querySelector("[data-ecomx-modal-img]");
-    const titleEl = modal.querySelector("[data-ecomx-modal-title]");
-    const priceEl = modal.querySelector("[data-ecomx-modal-price]");
-    const descEl = modal.querySelector("[data-ecomx-modal-desc]");
-    const variantsRoot = modal.querySelector("[data-ecomx-variants]");
-    const formEl = modal.querySelector("[data-ecomx-form]");
-    const statusEl = modal.querySelector("[data-ecomx-status]");
+    const imgEl = /** @type {HTMLImageElement|null} */ (
+      modal.querySelector("[data-ecomx-modal-img]")
+    );
+    const titleEl = /** @type {HTMLElement|null} */ (
+      modal.querySelector("[data-ecomx-modal-title]")
+    );
+    const priceEl = /** @type {HTMLElement|null} */ (
+      modal.querySelector("[data-ecomx-modal-price]")
+    );
+    const descEl = /** @type {HTMLElement|null} */ (
+      modal.querySelector("[data-ecomx-modal-desc]")
+    );
+    const variantsRoot = /** @type {HTMLElement|null} */ (
+      modal.querySelector("[data-ecomx-variants]")
+    );
+    const formEl = /** @type {HTMLFormElement|null} */ (
+      modal.querySelector("[data-ecomx-form]")
+    );
+    const statusEl = /** @type {HTMLElement|null} */ (
+      modal.querySelector("[data-ecomx-status]")
+    );
+
+    // Abort if any critical element is missing
+    if (!imgEl || !titleEl || !priceEl || !descEl || !variantsRoot || !formEl || !statusEl) return;
 
     // Bundle product handle from data attribute
     const bundleHandle =
       gridEl.getAttribute("data-bundle-handle") || "soft-winter-jacket";
 
     // Track currently loaded product
+    /** @type {ShopifyProduct|null} */
     let activeProduct = null;
 
     /*  Modal open / close  */
@@ -250,7 +298,9 @@
       document.documentElement.classList.add("ecomx-lock");
 
       // Accessibility: move focus to close button
-      const closeBtn = modal.querySelector(".ecomx-modal__close");
+      const closeBtn = /** @type {HTMLElement|null} */ (
+        modal.querySelector(".ecomx-modal__close")
+      );
       if (closeBtn) closeBtn.focus();
     };
 
@@ -274,7 +324,10 @@
     /*  Hotspot click  open popup  */
 
     gridEl.addEventListener("click", async (e) => {
-      const trigger = e.target.closest("[data-ecomx-open]");
+      const target = /** @type {HTMLElement|null} */ (e.target);
+      if (!target) return;
+
+      const trigger = target.closest("[data-ecomx-open]");
       if (!trigger) return;
 
       const handle = trigger.getAttribute("data-handle");
@@ -296,7 +349,7 @@
           activeProduct.images && activeProduct.images.length
             ? activeProduct.images[0]
             : "";
-        imgEl.src = featuredImage;
+        imgEl.src = featuredImage || "";
         imgEl.alt = activeProduct.title;
 
         // Render variant selectors
@@ -345,10 +398,10 @@
         //    If selected options include "Black" AND "Medium",
         //    also add "Soft Winter Jacket" (first available variant).
         const hasBlack = selected.some(
-          (v) => v && v.toLowerCase() === "black"
+          (v) => v != null && v.toLowerCase() === "black"
         );
         const hasMedium = selected.some(
-          (v) => v && v.toLowerCase() === "medium"
+          (v) => v != null && v.toLowerCase() === "medium"
         );
 
         if (hasBlack && hasMedium) {
@@ -378,6 +431,8 @@
   /*  Bootstrap  */
 
   document.addEventListener("DOMContentLoaded", () => {
-    document.querySelectorAll("[data-ecomx-grid]").forEach(initGrid);
+    document.querySelectorAll("[data-ecomx-grid]").forEach((el) => {
+      initGrid(/** @type {HTMLElement} */ (el));
+    });
   });
 })();
