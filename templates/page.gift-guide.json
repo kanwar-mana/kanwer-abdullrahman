@@ -1,7 +1,47 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
-    "banner": { "type": "ecomx-banner" },
-    "grid": { "type": "ecomx-product-grid" }
+    "banner": {
+      "type": "ecomx-banner",
+      "settings": {
+        "bg_color": "#ffffff",
+        "text_color": "#111111",
+        "accent_color": "#ffe500",
+        "logo_text": "TISSO VISON",
+        "promo_text": "Find the ideal gift for your loved ones.",
+        "cta_label": "CHOOSE GIFT",
+        "cta_link": "",
+        "heading": "The Gift Guide",
+        "body": "<p>Discover Joy: Your Ultimate Holiday Gift Destination. Explore our curated selection and find the perfect gifts to delight your loved ones this holiday season.</p>",
+        "primary_label": "SHOP NOW",
+        "primary_link": "",
+        "bottom_text": "SUSTAINABLE, ETHICALLY MADE CLOTHES IN SIZES XXS TO 6XL"
+      }
+    },
+    "grid": {
+      "type": "ecomx-product-grid",
+      "settings": {
+        "heading": "Tisso vison in the wild",
+        "product_1": "black-leather-bag",
+        "product_2": "blue-silk-tuxedo",
+        "product_3": "chequered-red-shirt",
+        "product_4": "classic-leather-jacket",
+        "product_5": "classic-varsity-top",
+        "product_6": "dark-denim-top",
+        "bundle_handle": "soft-winter-jacket"
+      }
+    }
   },
-  "order": ["banner", "grid"]
+  "order": [
+    "banner",
+    "grid"
+  ]
 }
